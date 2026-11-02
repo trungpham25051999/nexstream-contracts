@@ -1,0 +1,52 @@
+syntax = "proto3";
+package nexstream.transport.v1;
+
+import "proto/nexstream/telemetry/v1/telemetry.proto";
+
+enum ResultCode {
+  RESULT_CODE_UNSPECIFIED = 0;
+  SUCCESS = 1;
+  RETRYABLE_FAILURE = 2;
+  PERMANENT_FAILURE = 3;
+  UNKNOWN = 4;
+  RETRY_LATER = 5;
+}
+enum AuthCode {
+  AUTH_CODE_UNSPECIFIED = 0;
+  AUTHENTICATED = 1;
+  INVALID_CREDENTIALS = 2;
+  HOST_NOT_AUTHORIZED = 3;
+  AUTH_RETRY_LATER = 4;
+}
+
+message AuthRequest {
+  string agent_id = 1;
+  string host_id = 2;
+  string key_id = 3;
+  bytes secret = 4;
+}
+message AuthResult { AuthCode code = 1; string detail = 2; }
+message BatchStart { string batch_id = 1; string host_id = 2; uint32 expected_count = 3; }
+message Telemetry { nexstream.telemetry.v1.SystemMetricsSnapshot snapshot = 1; }
+message BatchEnd { string batch_id = 1; uint32 sent_count = 2; }
+message MessageResult { string message_id = 1; ResultCode code = 2; string detail = 3; }
+message BatchAck {
+  string batch_id = 1;
+  ResultCode overall_result = 2;
+  repeated MessageResult message_results = 3;
+}
+message ProtocolError { ResultCode code = 1; string detail = 2; }
+
+message Frame {
+  uint32 protocol_version = 1;
+  oneof body {
+    AuthRequest auth_request = 10;
+    AuthResult auth_result = 11;
+    BatchStart batch_start = 12;
+    Telemetry telemetry = 13;
+    BatchEnd batch_end = 14;
+    BatchAck batch_ack = 15;
+    ProtocolError protocol_error = 16;
+  }
+  reserved 2 to 9;
+}
