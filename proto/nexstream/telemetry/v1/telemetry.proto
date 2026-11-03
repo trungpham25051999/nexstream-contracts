@@ -1,0 +1,14 @@
+syntax = "proto3";
+package nexstream.telemetry.v1;
+
+// Minimal Sprint 01 snapshot. Fields 20-99 remain available for additive metrics.
+message SystemMetricsSnapshot {
+  string host_id = 1;
+  string message_id = 2;
+  int64 sample_timestamp_ms = 3;
+  double cpu_usage_percent = 10;
+  uint64 memory_used_bytes = 11;
+  uint64 memory_total_bytes = 12;
+  reserved 4 to 9;
+  reserved 13 to 19;
+}
