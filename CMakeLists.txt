@@ -27,3 +27,12 @@ target_link_libraries(nexstream_contracts_validation PUBLIC nexstream_contracts_
 target_include_directories(nexstream_contracts_validation PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 target_compile_options(nexstream_contracts_validation PRIVATE -Wall -Wextra -Wpedantic)
+
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(nexstream_contracts_unit_tests tests/unit/contract_tests.cpp)
+    target_link_libraries(nexstream_contracts_unit_tests PRIVATE nexstream_contracts_validation)
+    target_include_directories(nexstream_contracts_unit_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+    target_compile_options(nexstream_contracts_unit_tests PRIVATE -Wall -Wextra -Wpedantic)
+    add_test(NAME contracts_unit COMMAND nexstream_contracts_unit_tests)
+    set_tests_properties(contracts_unit PROPERTIES LABELS "unit")
