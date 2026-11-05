@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project(nexstream_contracts_consumer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(nexstream_contracts 0.1 REQUIRED CONFIG)
+add_executable(package_consumer main.cpp)
+target_link_libraries(package_consumer PRIVATE nexstream::contracts_validation)
