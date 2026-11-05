@@ -36,3 +36,17 @@ if(BUILD_TESTING)
     target_compile_options(nexstream_contracts_unit_tests PRIVATE -Wall -Wextra -Wpedantic)
     add_test(NAME contracts_unit COMMAND nexstream_contracts_unit_tests)
     set_tests_properties(contracts_unit PROPERTIES LABELS "unit")
+
+    add_executable(nexstream_contracts_integration_tests tests/integration/golden_vector_tests.cpp)
+    target_link_libraries(nexstream_contracts_integration_tests PRIVATE nexstream_contracts_validation)
+    target_include_directories(nexstream_contracts_integration_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+    target_compile_options(nexstream_contracts_integration_tests PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_definitions(nexstream_contracts_integration_tests PRIVATE
+        NEXSTREAM_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+    add_test(NAME contracts_golden_vectors COMMAND nexstream_contracts_integration_tests)
+    set_tests_properties(contracts_golden_vectors PROPERTIES LABELS "integration")
+
+    add_executable(nexstream_contracts_generate_golden EXCLUDE_FROM_ALL
+        tests/tools/generate_golden.cpp)
+    target_link_libraries(nexstream_contracts_generate_golden PRIVATE nexstream_contracts_proto)
+endif()
