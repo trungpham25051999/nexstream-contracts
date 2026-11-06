@@ -1,0 +1,15 @@
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+cmake --build build --parallel 2 --target nexstream_contracts_generate_golden
+./build/nexstream_contracts_generate_golden tests/vectors/telemetry_frame_v1.bin
+cmake --build build --parallel 2
+ctest --test-dir build --output-on-failure
+
+cmake -S . -B build-sanitize -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+cmake --build build-sanitize --parallel 2
+ctest --test-dir build-sanitize --output-on-failure
+
+protoc --proto_path=. --include_imports --descriptor_set_out=/tmp/nexstream-sprint01.pb proto/nexstream/telemetry/v1/telemetry.proto proto/nexstream/transport/v1/transport.proto
+cmake -S . -B build-final -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+cmake --build build-final --parallel 2
+ctest --test-dir build-final --output-on-failure
+buf --version
