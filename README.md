@@ -1,5 +1,7 @@
 # nexstream-contracts
 
+[![CI](https://github.com/trungpham25051999/nexstream-contracts/actions/workflows/ci.yml/badge.svg)](https://github.com/trungpham25051999/nexstream-contracts/actions/workflows/ci.yml) ![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus) ![Protobuf](https://img.shields.io/badge/Protobuf-3.21-4285F4) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 Versioned Protobuf contracts for NexStream transport and telemetry. Sprint 01 is implemented;
 this repository contains no Gateway, Kafka, collector, or deployment runtime.
 
